@@ -5,12 +5,30 @@
 
 Gram -> Record:? (Pattern _):+
 
-Pattern -> 
-  PatternElement (_ "," _ PatternElement)
+Pattern -> PatternElement (_ "," _ PatternElement):*
 
 PatternElement -> (Annotation _):? (Subject | Path)
 
-Subject -> "[" _ Attributes _ "]"
+Subject -> "[" _ Attributes _ Association:? "]"
+
+Association -> Associator _ Members
+
+Associator ->
+    Description 
+  | Ordering
+  | Containment
+
+Members -> AssociationMember (_ "," _ AssociationMember):*
+
+AssociationMember -> (PatternElement | Reference)
+
+Reference -> Identity
+
+Description -> "|"
+
+Ordering -> PlainArrow
+
+Containment -> "^" _ Symbol _ "^"
 
 Path -> 
     Node
@@ -60,7 +78,11 @@ Record ->
     "{" _ "}" _ 
   | "{" _ Property ("," _ Property ):* "}" _ 
 
-Property -> Symbol _ ":" _ Value 
+Property -> Symbol _ (Declare _ Symbol | Define _ Value)
+
+Declare -> "::"
+
+Define -> ":"
 
 Value -> 
     Null

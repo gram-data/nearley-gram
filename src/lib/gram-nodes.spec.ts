@@ -7,7 +7,8 @@ describe('node patterns', () => {
   test.each([
     '()',
     '(),()',
-    '(), ()'
+    '(), ()',
+    '(), (), ()'
   ])
   ('can be: %s', async (gram) => {
     const task = parse(gram);
@@ -26,12 +27,23 @@ describe('node identifiers', () => {
     '(aa)',
     '(a1)',
     '(abk@HERE)',
-    '("a sentence of words")'
+    '("a sentence of words")',
+    '(1)',
+    '(0xBE)',
   ])
   ('can be: %s', async (gram) => {
     const task = parse(gram);
     const result = await Effect.runPromiseExit(task)
     expect(Either.isRight(result)).toBeTruthy();
+  })
+  test.each([
+    '(-)',
+    '(*)',
+  ])
+  ('can not be: %s', async (gram) => {
+    const task = parse(gram);
+    const result = await Effect.runPromiseExit(task)
+    expect(Either.isLeft(result)).toBeTruthy();
   })
 })
 
