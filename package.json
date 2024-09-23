@@ -4,9 +4,13 @@
   "license": "MIT",
   "scripts": {
     "build": "nx build",
+    "build:nearley": "nearleyc gram.ne -o src/lib/generated-grammar.ts",
+    "build:railroad": "nearley-railroad gram.ne -o gram-railroad.html",
     "test": "nx test"
   },
   "dependencies": {
+    "effect": "^3.7.2",
+    "nearley": "^2.20.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
