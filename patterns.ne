@@ -15,4 +15,4 @@ Arrow -> "-[" Attributes "]->"
 
 Path -> Node | Relationship
 
-Subject -> "[" Attributes "]"
+Subject -> "[" Attributes ("|" | "->") Association "]"

@@ -7,13 +7,13 @@ Gram -> Record:? (Pattern _):+
 
 Pattern -> PatternElement (_ "," _ PatternElement):*
 
-PatternElement -> (Annotation _):? (Subject | Path)
+PatternElement -> (Annotation _):* (Subject | Path)
 
 Subject -> "[" _ Attributes _ Association:? "]"
 
 Association -> 
     Membership _ IndividualMembers
-  | Composition _ PairedMembers
+  | Ordering _ PairedMembers
 
 IndividualMembers -> AssociationMember (_ "," _ AssociationMember):*
 
@@ -25,7 +25,7 @@ Reference -> Identity
 
 Membership -> "|"
 
-Composition -> "->"
+Ordering -> "->"
 
 Containment -> "^" _ Symbol _ "^"
 
