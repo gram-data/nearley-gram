@@ -11,22 +11,21 @@ PatternElement -> (Annotation _):? (Subject | Path)
 
 Subject -> "[" _ Attributes _ Association:? "]"
 
-Association -> Associator _ Members
+Association -> 
+    Membership _ IndividualMembers
+  | Composition _ PairedMembers
 
-Associator ->
-    Description 
-  | Ordering
-  | Containment
+IndividualMembers -> AssociationMember (_ "," _ AssociationMember):*
 
-Members -> AssociationMember (_ "," _ AssociationMember):*
+PairedMembers -> AssociationMember (_ "," _ AssociationMember):+
 
 AssociationMember -> (PatternElement | Reference)
 
 Reference -> Identity
 
-Description -> "|"
+Membership -> "|"
 
-Ordering -> PlainArrow
+Composition -> "->"
 
 Containment -> "^" _ Symbol _ "^"
 
@@ -92,12 +91,18 @@ Value ->
   | StringLiteral
   | Measurement
   | TaggedStringLiteral
+  | Range
   
 Null -> "null"
 
 Boolean -> "true" | "false"
 
 Symbol -> [a-zA-Z_] [0-9a-zA-Z_@]:* | StringLiteral
+
+Range -> 
+    NumericLiteral ".." NumericLiteral
+  | NumericLiteral "..."
+  | "..." NumericLiteral
 
 NumericLiteral -> 
     Integer
