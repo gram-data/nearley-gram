@@ -39,6 +39,3 @@ jobs:
 
       - run: npm run build:railroad
 
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
