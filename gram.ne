@@ -1,8 +1,5 @@
 @preprocessor typescript
 
-@builtin "number.ne"
-@builtin "whitespace.ne"
-
 Gram -> Record:? (Pattern _):+
 
 Pattern -> PatternElement (_ "," _ PatternElement):*
@@ -150,3 +147,8 @@ NonSingleQuoteChar ->
 EscapedChars -> 
     ["\\/bfnrt] 
     | "u" [a-fA-F0-9] [a-fA-F0-9] [a-fA-F0-9] [a-fA-F0-9] 
+
+_  -> wschar:* 
+__ -> wschar:+ 
+
+wschar -> [ \t\n\v\f] 
