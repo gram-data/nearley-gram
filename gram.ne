@@ -69,7 +69,11 @@ Attributes -> Identity:? Labels:? Record:?
 
 Identity -> Value
 
-Labels -> (":" Label):+
+Labels -> (DeclaredLabels | DefinedLabels)
+
+DeclaredLabels -> (Declare Label):+
+
+DefinedLabels -> (Define Label):+
 
 Label -> Symbol
 
@@ -77,7 +81,7 @@ Record ->
     "{" _ "}" _ 
   | "{" _ Property ("," _ Property ):* "}" _ 
 
-Property -> Symbol _ (Declare _ Symbol | Define _ Value)
+Property -> Symbol _ (Declare | Define ) _ Value
 
 Declare -> "::"
 

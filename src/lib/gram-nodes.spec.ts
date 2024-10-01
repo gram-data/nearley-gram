@@ -60,6 +60,26 @@ describe('node labels', () => {
     const result = await Effect.runPromiseExit(task)
     expect(Either.isRight(result)).toBeTruthy();
   })
+
+  test.each([
+    '(a::Aye)',
+    '(ab::Aye::Bee)',
+  ])
+  ('can be declarations like: %s', async (gram) => {
+    const task = parse(gram);
+    const result = await Effect.runPromiseExit(task)
+    expect(Either.isRight(result)).toBeTruthy();
+  })
+
+  test.each([
+    '(ab::Aye:Bee)',
+  ])
+  ('can NOT mix definitions and declarations like: %s', async (gram) => {
+    const task = parse(gram);
+    const result = await Effect.runPromiseExit(task)
+    expect(Either.isLeft(result)).toBeTruthy();
+  })
+
   test.each([
     '(a:)',
     '(a:1)',
