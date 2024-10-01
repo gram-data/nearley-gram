@@ -5,8 +5,8 @@
   "scripts": {
     "build": "nx build",
     "build:nearley": "nearleyc gram.ne -o src/lib/generated-grammar.ts",
-    "build:railroad": "nearley-railroad gram.ne -o gram-railroad.html",
-    "build:patterns": "nearley-railroad patterns.ne -o patterns.html",
+    "build:railroad": "nearley-railroad gram.ne -o public/index.html",
+    "build:patterns": "nearley-railroad patterns.ne -o public/patterns.html",
     "test": "nx test"
   },
   "dependencies": {

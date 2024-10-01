@@ -130,7 +130,7 @@ StringLiteral ->
 
 DoubleQuotedLiteral -> "\"" NonDoubleQuoteChar:* "\"" 
 SingleQuotedLiteral -> "'"  NonSingleQuoteChar:* "'"  
-BacktickStringLiteral -> "`"  [^`]:*    "`"  
+BacktickStringLiteral -> "`"  [^`]:*  "`"  
 
 TaggedStringLiteral -> Symbol BacktickStringLiteral
 
