@@ -9,22 +9,15 @@ PatternElement -> (Annotation _):* (Subject | Path)
 Subject -> "[" _ Attributes _ Association:? "]"
 
 Association -> 
-    Membership _ IndividualMembers
-  | Ordering _ PairedMembers
+    Membership | Ordering 
 
-IndividualMembers -> AssociationMember (_ "," _ AssociationMember):*
+Membership -> "|"  _ AssociationMember (_ "," _ AssociationMember):*
 
-PairedMembers -> AssociationMember (_ "," _ AssociationMember):+
+Ordering -> "->" _  AssociationMember (_ "," _ AssociationMember):+
 
 AssociationMember -> (PatternElement | Reference)
 
 Reference -> Identity
-
-Membership -> "|"
-
-Ordering -> "->"
-
-Containment -> "^" _ Symbol _ "^"
 
 Path -> 
     Node
