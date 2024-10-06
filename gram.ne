@@ -11,9 +11,9 @@ Subject -> "[" _ Attributes _ Association:? "]"
 Association -> 
     Membership | Ordering 
 
-Membership -> "|"  _ AssociationMember (_ "," _ AssociationMember):*
+Membership -> "|" (Labels:? Record:? _ "|"):? _ AssociationMember (_ "," _ AssociationMember):*
 
-Ordering -> "->" _  AssociationMember (_ "," _ AssociationMember):+
+Ordering -> ("->" | "-[" Labels:? Record:? "]->") _  AssociationMember (_ "," _ AssociationMember):+
 
 AssociationMember -> (PatternElement | Reference)
 
@@ -27,7 +27,7 @@ Node -> "(" _ Attributes _ ")"
 
 Relationship -> Node Arrow Path
 
-Annotation -> "@" Symbol "(" Value ")"
+Annotation -> Annotate Symbol (("(" Value ")") | ":")
 
 Arrow ->
     PlainArrow
@@ -59,23 +59,24 @@ Attributes -> Identity:? Labels:? Record:?
 
 Identity -> Value
 
-Labels -> (DeclaredLabels | DefinedLabels)
-
-DeclaredLabels -> (Declare Label):+
-
-DefinedLabels -> (Define Label):+
-
-Label -> Symbol
+Labels -> ( (Define | Declare | Annotate) Key):+
 
 Record -> 
-    "{" _ "}" _ 
-  | "{" _ Property ("," _ Property ):* "}" _ 
+    "{" _ "}" 
+  | "{" _ Property ("," _ Property ):* "}"
 
-Property -> Symbol _ (Declare | Define ) _ Value
+Property -> Key _ ( Define | Declare | Annotate ) _ Value
 
+# What something has
+Define -> ":"
+
+# What something might have
 Declare -> "::"
 
-Define -> ":"
+# What it means
+Annotate -> "@"
+
+Key -> ( Symbol | StringLiteral )
 
 Value -> 
     Null
@@ -86,12 +87,18 @@ Value ->
   | Measurement
   | TaggedStringLiteral
   | Range
+  | Record
+  | ValueList
+
+ValueList -> 
+    "[" _ "]"
+  | "[" _ Value (_ "," _ Value):* _ "]"
   
 Null -> "null"
 
 Boolean -> "true" | "false"
 
-Symbol -> [a-zA-Z_] [0-9a-zA-Z_@]:* | StringLiteral
+Symbol -> [a-zA-Z_] [0-9a-zA-Z_@]:*
 
 Range -> 
     NumericLiteral ".." NumericLiteral

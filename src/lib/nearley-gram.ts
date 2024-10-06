@@ -1,6 +1,6 @@
 import * as Effect from "effect/Micro"
 
-import nearley from 'nearley';
+import * as nearley from 'nearley';
 
 import grammar from './generated-grammar';
 

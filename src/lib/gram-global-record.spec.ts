@@ -21,6 +21,9 @@ describe('global record', () => {
     ["{k:1..3}","a bounded range"],
     ["{k:1...}","a lower-bounded range"],
     ["{k:...3}","an upper-bounded range"],
+    ["{k:[1]}", "an array with a single number"],
+    ["{k:[1,2,3]}", "an array with numbers"],
+    ["{k:{kk:'nested'}}", "a nested record"]
   ])
   ('can define values like %s, which is %s', async (gram, description) => {
     const task = parse(gram);

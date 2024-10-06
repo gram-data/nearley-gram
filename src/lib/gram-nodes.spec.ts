@@ -74,10 +74,10 @@ describe('node labels', () => {
   test.each([
     '(ab::Aye:Bee)',
   ])
-  ('can NOT mix definitions and declarations like: %s', async (gram) => {
+  ('_can_ mix definitions and declarations like: %s', async (gram) => {
     const task = parse(gram);
     const result = await Effect.runPromiseExit(task)
-    expect(Either.isLeft(result)).toBeTruthy();
+    expect(Either.isRight(result)).toBeTruthy();
   })
 
   test.each([
@@ -107,10 +107,11 @@ describe('node labels', () => {
 describe('node annotation', () => {
   test.each([
     '@description("a simple node") (a)',
+    `@example: (a)`
   ])
   ('can be: %s', async (gram) => {
     const task = parse(gram);
-    const result = await Effect.runPromiseExit(task)
+    const result = await Effect.runPromiseExit(task);
     expect(Either.isRight(result)).toBeTruthy();
   })
 })
