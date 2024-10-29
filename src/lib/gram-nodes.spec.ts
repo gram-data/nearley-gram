@@ -26,7 +26,7 @@ describe('node identifiers', () => {
     '(_)',
     '(aa)',
     '(a1)',
-    '(abk@HERE)',
+    '(a-b-k)',
     '("a sentence of words")',
     '(1)',
     '(0xBE)',

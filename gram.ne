@@ -8,12 +8,7 @@ PatternElement -> (Annotation _):* (Subject | Path)
 
 Subject -> "[" _ Attributes _ Association:? "]"
 
-Association -> 
-    Membership | Ordering 
-
-Membership -> "|" (Labels:? Record:? _ "|"):? _ AssociationMember (_ "," _ AssociationMember):*
-
-Ordering -> ("->" | "-[" Labels:? Record:? "]->") _  AssociationMember (_ "," _ AssociationMember):+
+Association -> "|" (Labels:? Record:? _ "|"):? _ AssociationMember (_ "," _ AssociationMember):*
 
 AssociationMember -> (PatternElement | Reference)
 
@@ -98,14 +93,14 @@ Null -> "null"
 
 Boolean -> "true" | "false"
 
-Symbol -> [a-zA-Z_] [0-9a-zA-Z_@]:*
+Symbol -> [a-zA-Z_] [0-9a-zA-Z_\-]:*
 
 Range -> 
     NumericLiteral ".." NumericLiteral
   | NumericLiteral "..."
   | "..." NumericLiteral
 
-NumericLiteral -> 
+NumericLiteral ->
     Integer
   | Decimal
   | Hexadecimal
@@ -128,10 +123,12 @@ StringLiteral ->
     DoubleQuotedLiteral
   | SingleQuotedLiteral
   | BacktickStringLiteral
+  | FencedStringLiteral
 
 DoubleQuotedLiteral -> "\"" NonDoubleQuoteChar:* "\"" 
 SingleQuotedLiteral -> "'"  NonSingleQuoteChar:* "'"  
-BacktickStringLiteral -> "`"  [^`]:*  "`"  
+BacktickStringLiteral -> "`"  NonBacktickChar:*  "`"  
+FencedStringLiteral -> "```\n" [\s\S]:+ "\n```"
 
 TaggedStringLiteral -> Symbol BacktickStringLiteral
 
@@ -143,6 +140,11 @@ NonSingleQuoteChar ->
     [^\\'\n] 
   | "\\" EscapedChars
   | "\\'"
+
+NonBacktickChar ->
+    [^`\n]
+  | "\\" EscapedChars
+  | "\\`"
 
 EscapedChars -> 
     ["\\/bfnrt] 

@@ -8,6 +8,7 @@
   "targets": {
     "generate": {
         "executor": "nx:run-script",
+        "outputs": ["{projectRoot}/src/lib/nearley-gram.ts"],
         "options": {
             "script": "build:nearley"
         }
@@ -27,6 +28,7 @@
       "command": "eslint ./src ./package.json"
     },
     "test": {
+      "dependsOn": ["generate"],
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
