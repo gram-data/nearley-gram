@@ -29,7 +29,6 @@ describe('node identifiers', () => {
     '(a-b-k)',
     '("a sentence of words")',
     '(1)',
-    '(0xBE)',
   ])
   ('can be: %s', async (gram) => {
     const task = parse(gram);
@@ -39,6 +38,9 @@ describe('node identifiers', () => {
   test.each([
     '(-)',
     '(*)',
+    '(@abk)',
+    '(@@metabk)',
+    '(0xBE)',
   ])
   ('can not be: %s', async (gram) => {
     const task = parse(gram);
@@ -53,7 +55,8 @@ describe('node labels', () => {
     '(ab:Aye:Bee)',
     '(a:"A few words with whitespace")',
     "(a:'Words within single quotes')",
-    "(a:`Words within backticks`)"
+    "(a:`Words within backticks`)",
+    '(a:1)',
   ])
   ('can be Symbols like: %s', async (gram) => {
     const task = parse(gram);
@@ -82,7 +85,6 @@ describe('node labels', () => {
 
   test.each([
     '(a:)',
-    '(a:1)',
     `(a:0x1337)`
   ])
   ('can not be things like: %s', async (gram) => {

@@ -1,8 +1,15 @@
-import * as Effect from "effect/Micro"
-import * as Either from "effect/Either"
+
+import { Effect, Either, Exit, Cause } from "effect"
 
 import { parse } from './nearley-gram';
+import { Parser } from "nearley";
 
+const debugExit = (x:Exit.Exit<Parser, unknown>) => Exit.match(x,
+  {
+    onSuccess: (success) => JSON.stringify(success.results),
+    onFailure: (error) => Cause.pretty(error)
+  }
+)
 
 describe('global record', () => {
   test.each([
@@ -28,7 +35,8 @@ describe('global record', () => {
   ('can define values like %s, which is %s', async (gram, description) => {
     const task = parse(gram);
     const result = await Effect.runPromiseExit(task)
-    expect(Either.isRight(result)).toBeTruthy();
+    if (Exit.isFailure(result)) console.error(debugExit(result))
+    expect(Exit.isSuccess(result)).toBeTruthy();
   })
 
   test.each([
@@ -38,13 +46,15 @@ describe('global record', () => {
   ('can define multiple values like: %s', async (gram) => {
     const task = parse(gram);
     const result = await Effect.runPromiseExit(task)
-    expect(Either.isRight(result)).toBeTruthy();
+    if (Exit.isFailure(result)) console.error(debugExit(result))
+    expect(Exit.isSuccess(result)).toBeTruthy();
   })
-  it('cannot appear twice', async () => {
-    const gram = `{k:1} {k:2}`;
+  it('can not appear twice', async () => {
+    const gram = `{k:1} {k:2} {k:3} {k:4}`;
     const task = parse(gram);
     const result = await Effect.runPromiseExit(task)
-    expect(Either.isLeft(result)).toBeTruthy();
+    if (Exit.isSuccess(result)) console.error(debugExit(result))
+    expect(Exit.isFailure(result)).toBeTruthy();
 
   })
 
@@ -54,6 +64,6 @@ describe('global record', () => {
   ('can declare multiple keys like: %s', async (gram) => {
     const task = parse(gram);
     const result = await Effect.runPromiseExit(task)
-    expect(Either.isRight(result)).toBeTruthy();
+    expect(Exit.isSuccess(result)).toBeTruthy();
   })
 })

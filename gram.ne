@@ -1,22 +1,25 @@
 @preprocessor typescript
 
-Gram -> Record:? (Pattern _):+
+Gram -> (Record _):? (Pattern _):*
+  {% ([record, patterns]) => `(gram ${record ? record : ""} ${patterns.filter(nonNull).join(",")})` %}
 
 Pattern -> PatternElement (_ "," _ PatternElement):*
+  {% ([p1, ps]) => `(pattern ${p1})` %}
 
-PatternElement -> (Annotation _):* (Subject | Path)
+PatternElement -> (Annotation _):* (Subject | Path | Reference)
+  {% ([anno, el]) => `${anno.filter(nonNull).join("@")}${el}?` %}
 
 Subject -> "[" _ Attributes _ Association:? "]"
+  {% () => `(subject)` %}
 
-Association -> "|" (Labels:? Record:? _ "|"):? _ AssociationMember (_ "," _ AssociationMember):*
-
-AssociationMember -> (PatternElement | Reference)
+Association -> "|" (Labels:? Record:? _ "|"):? _ Pattern
 
 Reference -> Identity
+  {% () => `(reference)` %}
 
 Path -> 
-    Node
-  | Relationship
+    Node {% () => `(node)` %}
+  | Relationship  {% () => `(relationship)` %}
 
 Node -> "(" _ Attributes _ ")"
 
@@ -52,15 +55,17 @@ QualifiedArrow ->
 
 Attributes -> Identity:? Labels:? Record:?
 
-Identity -> Value
+Identity -> Key
 
-Labels -> ( (Define | Declare | Annotate) Key):+
+Labels -> ( (Define | Declare ) Key):+
 
 Record -> 
     "{" _ "}" 
   | "{" _ Property ("," _ Property ):* "}"
+  {% (d) => `(record ${(d.length > 2) ? d[2] : ""})` %}
 
-Property -> Key _ ( Define | Declare | Annotate ) _ Value
+Property -> Key _ ( Define | Declare ) _ Value
+  {% ([key, _1, binder, _2, value]) => `(property ${key} ${value})` %}
 
 # What something has
 Define -> ":"
@@ -71,7 +76,7 @@ Declare -> "::"
 # What it means
 Annotate -> "@"
 
-Key -> ( Symbol | StringLiteral )
+Key -> ( Symbol | StringLiteral | Integer)
 
 Value -> 
     Null
@@ -93,7 +98,8 @@ Null -> "null"
 
 Boolean -> "true" | "false"
 
-Symbol -> [a-zA-Z_] [0-9a-zA-Z_\-]:*
+Symbol -> [a-zA-Z_] [0-9a-zA-Z_\-@]:* 
+{% (d) => `(symbol)` %}
 
 Range -> 
     NumericLiteral ".." NumericLiteral
@@ -108,16 +114,18 @@ NumericLiteral ->
   | Percentage
 
 Integer -> ("-"|"+"):? [0-9]:+
+  {% (d) => `(integer)` %}
 
-Decimal -> "-":? [0-9]:+ ("." [0-9]:+):? ([eE] [+-]:? [0-9]:+):? 
+Decimal -> "-":? [0-9]:+ ("." [0-9]:+) ([eE] [+-]:? [0-9]:+):? 
+  {% (d) => `(decimal)` %}
 
 Hexadecimal -> "-":? "0x" [0-9a-fA-F]:+
 
 Octal -> "-":? "0" [0-7]:+
 
-Measurement -> Decimal Symbol
+Measurement -> NumericLiteral Symbol
 
-Percentage -> Decimal "%"
+Percentage -> NumericLiteral "%"
 
 StringLiteral ->
     DoubleQuotedLiteral
@@ -151,6 +159,25 @@ EscapedChars ->
     | "u" [a-fA-F0-9] [a-fA-F0-9] [a-fA-F0-9] [a-fA-F0-9] 
 
 _  -> wschar:* 
+  {% nothing %}
 __ -> wschar:+ 
+  {% nothing %}
 
 wschar -> [ \t\n\v\f] 
+
+@{% 
+  const nothing = () => null;
+
+  const nonNull = (x) => (x !== null && x !== '')
+
+  const nonNullArray = (d) => {
+    let output = [d[2]];
+
+    for (let i in d[3]) {
+        output.push(d[3][i][3]);
+    }
+
+    return output;
+}
+
+%}

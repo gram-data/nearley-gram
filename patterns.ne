@@ -3,6 +3,8 @@
 @builtin "number.ne"
 @builtin "whitespace.ne"
 
+# A simplified grammar showing the primary elements
+
 Pattern -> PatternElement ("," PatternElement):*
 
 PatternElement -> (Node | Relationship | Subject)
