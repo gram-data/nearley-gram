@@ -23,10 +23,11 @@ describe('relationship patterns', () => {
     expect(Either.isRight(result)).toBeTruthy();
   })
 })
-describe('relationship attributes', () => {
+describe('relationship identifiers', () => {
   test.each([
     '()-[a]->()',
-    '()-["a"]->()'
+    '()-["a"]->()',
+    '()-[2]->()'
   ])
   ('can be: %s', async (gram) => {
     const task = parse(gram);

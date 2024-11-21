@@ -12,7 +12,7 @@ PatternElement -> (Annotation _):* (Subject | Path | Reference)
 Subject -> "[" _ Attributes _ Association:? "]"
   {% () => `(subject)` %}
 
-Association -> "|" (Labels:? Record:? _ "|"):? _ Pattern
+Association -> "|" _ Pattern
 
 Reference -> Identity
   {% () => `(reference)` %}
