@@ -1,5 +1,5 @@
 {
-  "name": "@nearley-gram/source",
+  "name": "@gram-data/nearley-gram",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
